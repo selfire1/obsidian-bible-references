@@ -1,9 +1,9 @@
 {
 	"id": "obsidian-sample-plugin",
-	"name": "Sample Plugin",
-	"version": "1.0.1",
+	"name": "Bible References",
+	"version": "0.0.9",
 	"minAppVersion": "0.9.12",
-	"description": "This is a sample plugin for Obsidian. This plugin demonstrates some of the capabilities of the Obsidian API.",
+	"description": "Allows you to find/replace bible references with links.",
 	"author": "Obsidian",
 	"authorUrl": "https://obsidian.md/about",
 	"isDesktopOnly": false
