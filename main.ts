@@ -108,9 +108,9 @@ function fixBibleReferences() {
   }
 
   for (let match of draft.content.matchAll(versePattern)) {
-    let [str, book, chapter, verse, _na] = match;
+    let [str, book, chapter, startVerse, _endVerse] = match;
     if (is_book(book)) {
-      let ref = {book: normalize_book(book), chapter: chapter, verse: verse, ref: str};
+      let ref = {book: normalize_book(book), chapter: chapter, verse: startVerse, ref: str};
       draft.content = draft.content.replace(str, wikiBible(ref));
     }
   }
