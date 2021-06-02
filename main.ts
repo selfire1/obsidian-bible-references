@@ -107,11 +107,11 @@ function fixBibleReferences() {
     return `[[ESV/${b.book}/${b.book}-${b.chapter}${prefix(b.verse, "#")}|${b.ref}]]`;
   }
 
-  for (let match of draft.content.matchAll(versePattern)) {
+  for (let match of this.app.workspace.activeLeaf.view.data.matchAll(versePattern)) {
     let [str, book, chapter, startVerse, _endVerse] = match;
     if (is_book(book)) {
       let ref = {book: normalize_book(book), chapter: chapter, verse: startVerse, ref: str};
-      draft.content = draft.content.replace(str, wikiBible(ref));
+      this.app.workspace.activeLeaf.view.data = this.app.workspace.activeLeaf.view.data.replace(str, wikiBible(ref));
     }
   }
 }
