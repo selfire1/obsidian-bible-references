@@ -1,7 +1,7 @@
 import { App, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
 interface MyPluginSettings {
-	mySetting: string;
+  mySetting: string;
 }
 
 function fixBibleReferences() {
@@ -117,66 +117,66 @@ function fixBibleReferences() {
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-	mySetting: 'default'
+  mySetting: 'default'
 }
 
 export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+  settings: MyPluginSettings;
 
-	async onload() {
-		console.log('loading plugin');
+  async onload() {
+    console.log('loading plugin');
 
-		await this.loadSettings();
+    await this.loadSettings();
 
-		this.addCommand({
-			id: 'fix-bible-references',
-			name: 'Fix Bible References',
-			callback: () => {
-				console.log('Simple Callback');
-			},
-		});
+    this.addCommand({
+      id: 'fix-bible-references',
+      name: 'Fix Bible References',
+      callback: () => {
+        console.log('Simple Callback');
+      },
+    });
 
-		this.addSettingTab(new SampleSettingTab(this.app, this));
-	}
+    this.addSettingTab(new SampleSettingTab(this.app, this));
+  }
 
-	onunload() {
-		console.log('unloading plugin');
-	}
+  onunload() {
+    console.log('unloading plugin');
+  }
 
-	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
-	}
+  async loadSettings() {
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+  }
 
-	async saveSettings() {
-		await this.saveData(this.settings);
-	}
+  async saveSettings() {
+    await this.saveData(this.settings);
+  }
 }
 
 class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
+  plugin: MyPlugin;
 
-	constructor(app: App, plugin: MyPlugin) {
-		super(app, plugin);
-		this.plugin = plugin;
-	}
+  constructor(app: App, plugin: MyPlugin) {
+    super(app, plugin);
+    this.plugin = plugin;
+  }
 
-	display(): void {
-		let {containerEl} = this;
+  display(): void {
+    let {containerEl} = this;
 
-		containerEl.empty();
+    containerEl.empty();
 
-		containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
+    containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
 
-		new Setting(containerEl)
-			.setName('Setting #1')
-			.setDesc('It\'s a secret')
-			.addText(text => text
-				.setPlaceholder('Enter your secret')
-				.setValue('')
-				.onChange(async (value) => {
-					console.log('Secret: ' + value);
-					this.plugin.settings.mySetting = value;
-					await this.plugin.saveSettings();
-				}));
-	}
+    new Setting(containerEl)
+      .setName('Setting #1')
+      .setDesc('It\'s a secret')
+      .addText(text => text
+        .setPlaceholder('Enter your secret')
+        .setValue('')
+        .onChange(async (value) => {
+          console.log('Secret: ' + value);
+          this.plugin.settings.mySetting = value;
+          await this.plugin.saveSettings();
+        }));
+  }
 }
