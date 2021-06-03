@@ -2,6 +2,7 @@ import { App, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian'
 
 interface MyPluginSettings {
   mySetting: string;
+  versepattern: string;
 }
 
 function fixBibleReferences() {
@@ -117,7 +118,8 @@ function fixBibleReferences() {
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-  mySetting: 'default'
+  mySetting: 'default',
+  versepattern: 'default'
 }
 
 export default class MyPlugin extends Plugin {
@@ -171,11 +173,11 @@ class SampleSettingTab extends PluginSettingTab {
       .setName('Verse Pattern')
       .setDesc('Enter your verse pattern')
       .addText(text => text
-        .setPlaceholder('Enter your secret')
-        .setValue('')
+        .setPlaceholder('Verse pattern')
+        .setValue('this.plugin.settings.versepattern')
         .onChange(async (value) => {
           console.log('Secret: ' + value);
-          this.plugin.settings.mySetting = value;
+          this.plugin.settings.versepattern = value;
           await this.plugin.saveSettings();
         }));
   }
