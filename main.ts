@@ -5,7 +5,7 @@ interface MyPluginSettings {
 }
 
 function fixBibleReferences() {
-  let BOOKS = {
+  let BOOKS:any = {
     'Genesis': /Genesis|Gen\.?|Ge\.?|Gn\.?/,
     'Exodus': /Exodus|Ex\.?|Exod\.?|Exo\.?/,
     'Leviticus': /Leviticus|Lev\.?|Le\.?|Lv\.?/,
