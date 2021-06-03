@@ -2,10 +2,11 @@ import { App, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian'
 
 interface MyPluginSettings {
   mySetting: string;
+  versepattern: string;
 }
 
 function fixBibleReferences() {
-  let BOOKS = {
+  let BOOKS:any = {
     'Genesis': /Genesis|Gen\.?|Ge\.?|Gn\.?/,
     'Exodus': /Exodus|Ex\.?|Exod\.?|Exo\.?/,
     'Leviticus': /Leviticus|Lev\.?|Le\.?|Lv\.?/,
@@ -76,7 +77,7 @@ function fixBibleReferences() {
 
   let versePattern = /((?:\d )?\w+) (\d+)(?::(\d+)(?:-(\d+))?)?/g;
 
-  let normalize_book = function(attempt) {
+  let normalize_book = function(attempt: string) {
     for (let book in BOOKS) {
       if (attempt.match(BOOKS[book])) {
         return book;
@@ -85,7 +86,7 @@ function fixBibleReferences() {
     throw "Book not found, " + attempt;
   }
 
-  let is_book = function(attempt) {
+  let is_book = function(attempt: string) {
     for (let book in BOOKS) {
       if (attempt.match(BOOKS[book])) {
         return true;
@@ -94,7 +95,7 @@ function fixBibleReferences() {
     return false;
   }
 
-  let prefix = function(str, pre) {
+  let prefix = function(str: any, pre: string) {
     if (str) {
       return `${pre}${str}`;
     }
@@ -103,7 +104,7 @@ function fixBibleReferences() {
     }
   }
 
-  let wikiBible = function(b) {
+  let wikiBible = function(b: { book: any; chapter: any; verse: any; ref: any; }) {
     return `[[ESV/${b.book}/${b.book}-${b.chapter}${prefix(b.verse, "#")}|${b.ref}]]`;
   }
 
@@ -117,7 +118,8 @@ function fixBibleReferences() {
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-  mySetting: 'default'
+  mySetting: 'default',
+  versepattern: 'default'
 }
 
 export default class MyPlugin extends Plugin {
@@ -168,14 +170,14 @@ class SampleSettingTab extends PluginSettingTab {
     containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
 
     new Setting(containerEl)
-      .setName('Setting #1')
-      .setDesc('It\'s a secret')
+      .setName('Verse Pattern')
+      .setDesc('Enter your verse pattern')
       .addText(text => text
-        .setPlaceholder('Enter your secret')
-        .setValue('')
+        .setPlaceholder('Verse pattern')
+        .setValue('this.plugin.settings.versepattern')
         .onChange(async (value) => {
           console.log('Secret: ' + value);
-          this.plugin.settings.mySetting = value;
+          this.plugin.settings.versepattern = value;
           await this.plugin.saveSettings();
         }));
   }
