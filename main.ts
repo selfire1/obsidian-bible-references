@@ -168,8 +168,8 @@ class SampleSettingTab extends PluginSettingTab {
     containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
 
     new Setting(containerEl)
-      .setName('Setting #1')
-      .setDesc('It\'s a secret')
+      .setName('Verse Pattern')
+      .setDesc('Enter your verse pattern')
       .addText(text => text
         .setPlaceholder('Enter your secret')
         .setValue('')
