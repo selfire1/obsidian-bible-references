@@ -76,7 +76,7 @@ function fixBibleReferences() {
 
   let versePattern = /((?:\d )?\w+) (\d+)(?::(\d+)(?:-(\d+))?)?/g;
 
-  let normalize_book = function(attempt) {
+  let normalize_book = function(attempt: string) {
     for (let book in BOOKS) {
       if (attempt.match(BOOKS[book])) {
         return book;
@@ -85,7 +85,7 @@ function fixBibleReferences() {
     throw "Book not found, " + attempt;
   }
 
-  let is_book = function(attempt) {
+  let is_book = function(attempt: string) {
     for (let book in BOOKS) {
       if (attempt.match(BOOKS[book])) {
         return true;
@@ -94,7 +94,7 @@ function fixBibleReferences() {
     return false;
   }
 
-  let prefix = function(str, pre) {
+  let prefix = function(str: any, pre: string) {
     if (str) {
       return `${pre}${str}`;
     }
@@ -103,7 +103,7 @@ function fixBibleReferences() {
     }
   }
 
-  let wikiBible = function(b) {
+  let wikiBible = function(b: { book: any; chapter: any; verse: any; ref: any; }) {
     return `[[ESV/${b.book}/${b.book}-${b.chapter}${prefix(b.verse, "#")}|${b.ref}]]`;
   }
 
