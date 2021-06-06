@@ -108,13 +108,15 @@ function fixBibleReferences(app) {
   }
 
   let view = app.workspace.activeLeaf.view;
-  for (let match of view.data.matchAll(verseRegex)) {
+  let content = view.data
+  for (let match of content.matchAll(verseRegex)) {
     let [str, book, chapter, startVerse, _endVerse] = match;
     if (is_book(book)) {
       let ref = {book: normalize_book(book), chapter: chapter, verse: startVerse, ref: str};
-      app.vault.modify(view.file, view.data.replace(str, wikiBible(ref)));
+      content = content.replace(str, wikiBible(ref))
     }
   }
+  app.vault.modify(view.file, content);
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
