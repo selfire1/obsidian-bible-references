@@ -1,7 +1,6 @@
 import { App, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
 interface MyPluginSettings {
-  mySetting: string;
   versepattern: string;
 }
 
@@ -119,7 +118,6 @@ function fixBibleReferences(app) {
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-  mySetting: 'default',
   versepattern: 'default'
 }
 
