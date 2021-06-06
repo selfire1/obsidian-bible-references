@@ -5,7 +5,7 @@ interface MyPluginSettings {
   versepattern: string;
 }
 
-function fixBibleReferences() {
+function fixBibleReferences(app) {
   let BOOKS:any = {
     'Genesis': /Genesis|Gen\.?|Ge\.?|Gn\.?/,
     'Exodus': /Exodus|Ex\.?|Exod\.?|Exo\.?/,
@@ -108,11 +108,12 @@ function fixBibleReferences() {
     return `[[ESV/${b.book}/${b.book}-${b.chapter}${prefix(b.verse, "#")}|${b.ref}]]`;
   }
 
-  for (let match of this.app.workspace.activeLeaf.view.data.matchAll(versePattern)) {
+  let view = app.workspace.activeLeaf.view;
+  for (let match of view.data.matchAll(versePattern)) {
     let [str, book, chapter, startVerse, _endVerse] = match;
     if (is_book(book)) {
       let ref = {book: normalize_book(book), chapter: chapter, verse: startVerse, ref: str};
-      this.app.workspace.activeLeaf.view.data = this.app.workspace.activeLeaf.view.data.replace(str, wikiBible(ref));
+      app.vault.modify(view.file, view.data.replace(str, wikiBible(ref)));
     }
   }
 }
@@ -134,7 +135,7 @@ export default class MyPlugin extends Plugin {
       id: 'fix-bible-references',
       name: 'Fix Bible References',
       callback: () => {
-        console.log('Simple Callback');
+        fixBibleReferences(this.app)
       },
     });
 
