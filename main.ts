@@ -75,7 +75,7 @@ function fixBibleReferences(app) {
     'Revelation': /Revelation|Rev|Re|The Revelation/
   }
 
-  let versePattern = /((?:\d )?\w+) (\d+)(?::(\d+)(?:-(\d+))?)?/g;
+  let verseRegex = /((?:\d )?\w+) (\d+)(?::(\d+)(?:-(\d+))?)?/g;
 
   let normalize_book = function(attempt: string) {
     for (let book in BOOKS) {
@@ -109,7 +109,7 @@ function fixBibleReferences(app) {
   }
 
   let view = app.workspace.activeLeaf.view;
-  for (let match of view.data.matchAll(versePattern)) {
+  for (let match of view.data.matchAll(verseRegex)) {
     let [str, book, chapter, startVerse, _endVerse] = match;
     if (is_book(book)) {
       let ref = {book: normalize_book(book), chapter: chapter, verse: startVerse, ref: str};
