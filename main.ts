@@ -74,9 +74,10 @@ function fixBibleReferences(app) {
     'Revelation': /Revelation|Rev|Re|The Revelation/
   }
 
-  let verseRegex = /((?:\d )?\w+) (\d+)(?::(\d+)(?:-(\d+))?)?/g;
+  let verseRegex = this.plugin.settings.versepattern;
 
   let normalize_book = function(attempt: string) {
+    debugger;
     for (let book in BOOKS) {
       if (attempt.match(BOOKS[book])) {
         return book;
@@ -172,9 +173,9 @@ class SampleSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName('Verse Pattern')
-      .setDesc('Enter the regex pattern to find verse and chapter.')
+      .setDesc('Enter the regex pattern to find book, verse and chapter. You can use https://regexr.com/ for help.')
       .addText(text => text
-        .setPlaceholder('Verse pattern')
+        .setPlaceholder('Regex pattern')
         .setValue('/((?:\d )?\w+) (\d+)(?::(\d+)(?:-(\d+))?)?/g')
         .onChange(async (value) => {
           console.log('Versepattern: ' + value);
