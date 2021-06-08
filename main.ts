@@ -172,12 +172,12 @@ class SampleSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName('Verse Pattern')
-      .setDesc('Enter your verse pattern')
+      .setDesc('Enter the regex pattern to find verse and chapter.')
       .addText(text => text
         .setPlaceholder('Verse pattern')
-        .setValue('this.plugin.settings.versepattern')
+        .setValue('/((?:\d )?\w+) (\d+)(?::(\d+)(?:-(\d+))?)?/g')
         .onChange(async (value) => {
-          console.log('Secret: ' + value);
+          console.log('Versepattern: ' + value);
           this.plugin.settings.versepattern = value;
           await this.plugin.saveSettings();
         }));
