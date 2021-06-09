@@ -1,6 +1,6 @@
-import { App, Modal, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { App, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
-interface MyPluginSettings {
+interface BibleReferencesSettings {
   bibleFolder: string;
   customLinkScheme: string;
   foldersEnabled: boolean;
@@ -155,14 +155,14 @@ function fixBibleReferences(app) {
   app.vault.modify(view.file, content);
 }
 
-const DEFAULT_SETTINGS: MyPluginSettings = {
+const DEFAULT_SETTINGS: BibleReferencesSettings = {
   customLinkScheme: 'default',
   foldersEnabled: false,
   bibleFolder: 'default'
 }
 
-export default class MyPlugin extends Plugin {
-  settings: MyPluginSettings;
+export default class BibleReferences extends Plugin {
+  settings: BibleReferencesSettings;
 
   async onload() {
     console.log('loading plugin');
@@ -194,9 +194,9 @@ export default class MyPlugin extends Plugin {
 }
 
 class SampleSettingTab extends PluginSettingTab {
-  plugin: MyPlugin;
+  plugin: BibleReferences;
 
-  constructor(app: App, plugin: MyPlugin) {
+  constructor(app: App, plugin: BibleReferences) {
     super(app, plugin);
     this.plugin = plugin;
   }
