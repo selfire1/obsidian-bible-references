@@ -188,10 +188,10 @@ class SampleSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName('Path to Bible Folder')
-      .setDesc('Enter the path to the Bible Folder. Current display: ')
+      .setDesc('Enter the path to the Bible Folder.')
       .addText(text => text
-        .setPlaceholder('WEB')
-        .setValue('WEB')
+        .setPlaceholder('/BibleFolder')
+        .setValue('/BibleFolder')
         .onChange(async (value) => {
           console.log('Bible Folder: ' + value);
           this.plugin.settings.bibleFolder = value;
