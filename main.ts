@@ -171,7 +171,7 @@ export default class BibleReferences extends Plugin {
 
     this.addCommand({
       id: 'fix-bible-references',
-      name: 'Fix Bible References',
+      name: 'Replace',
       callback: () => {
         fixBibleReferences(this.app)
       },
