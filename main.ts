@@ -2,7 +2,7 @@ import { App, Modal, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
 interface MyPluginSettings {
   bibleFolder: string;
-  versepattern: string;
+  customLinkPattern: string;
   foldersEnabled: boolean;
 }
 
@@ -106,13 +106,37 @@ function fixBibleReferences(app) {
   }
 
   let wikiBible = function(b: { book: any; chapter: any; verse: any; ref: any; }) {
-    if(this.plugin.settings.foldersEnabled) {
+    /* NEW!
+      Replaces a custom pattern like "{{book}}/{{book}}-{{chapter}}#{{verse}}|{{input}}"
+      with the variables stored.
+    */
+     
+    // There is surely a prettier way to do this – maybe objects?
+    let toReplace = ["{{book}}", "{{chapter}}", "{{verse}}", "{{input}}"]
+    let replaceWith = [`${b.book}`, `${b.chapter}`, `${b.verse}`, `${b.ref}`]
+    
+
+    for (let i = 0; i <= toReplace.length; i++){
+      if (i === 0) {
+        // For the first iteration, pull the custom pattern in the settings
+        var linkPattern = this.plugin.settings.customLinkPattern;
+      }
+      // Replace custom patterns with the variables
+      var linkPattern:any = linkPattern.replaceAll(toReplace[i], replaceWith[i])
+    }
+
+    if (this.plugin.settings.foldersEnabled && this.plugin.settings.bibleFolder !== '') {
       // If folders are enabled, add the folder in front
-      return this.plugin.settings.bibleFolder + `/${b.book}/${b.book}-${b.chapter}${prefix(b.verse, "#")}|${b.ref}]]`
-      
+
+      // Delete '/' if that's the first character
+      let bibleFolder:any = this.plugin.settings.bibleFolder
+      bibleFolder.value = bibleFolder.replace(/^\//, '');
+
+      return bibleFolder + "/" + `${b.book}/` + linkPattern
+
     } else {
       // If folders aren't enabled, don't add a folder
-      return `${b.book}/${b.book}-${b.chapter}${prefix(b.verse, "#")}|${b.ref}]]`
+      return linkPattern
 
       }
     
@@ -131,7 +155,7 @@ function fixBibleReferences(app) {
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-  versepattern: 'default',
+  customLinkPattern: 'default',
   foldersEnabled: false,
   bibleFolder: 'default'
 }
@@ -192,31 +216,35 @@ class SampleSettingTab extends PluginSettingTab {
           console.log('Folders in links: ' + value);
           this.plugin.settings.foldersEnabled = value;
           await this.plugin.saveSettings();
+          // Force refresh
+          this.display();
         });
       });
 
+    if (this.plugin.settings.foldersEnabled){
     new Setting(containerEl)
       .setName('Path to Bible Folder')
       .setDesc('Enter the path to the Bible Folder.')
       .addText(text => text
-        .setPlaceholder('/BibleFolder')
-        .setValue('/BibleFolder')
+        .setPlaceholder('BibleFolder')
+        .setValue('')
         .onChange(async (value) => {
           console.log('Bible Folder: ' + value);
           this.plugin.settings.bibleFolder = value;
           await this.plugin.saveSettings();
         }));
-      
+    }
    
     new Setting(containerEl)
       .setName('Bible Reference pattern')
-      .setDesc('Enter the pattern that should replace the input. Supported: {{string}},{{book}}, {{chapter}}, {{verse}}, {{endverse}}, {{input}}.')
+      .setDesc('Enter the pattern that should replace the input. Supported: {{book}}, {{chapter}}, {{verse}}, {{endverse}}, {{input}}.')
+      // .setDesc('Second desc')
       .addText(text => text
         .setPlaceholder('Link pattern')
-        .setValue('{{book}}/{{book}}-{{chapter}}#|{{input}}')
+        .setValue('{{book}}/{{book}}-{{chapter}}#{{verse}}|{{input}}')
         .onChange(async (value) => {
           console.log('Linkpattern: ' + value);
-          this.plugin.settings.versepattern = value;
+          this.plugin.settings.customLinkPattern = value;
           await this.plugin.saveSettings();
         }));
 
