@@ -106,7 +106,7 @@ function fixBibleReferences(app) {
   }
 
   let wikiBible = function(b: { book: any; chapter: any; verse: any; ref: any; }) {
-    if (this.plugin.settings.foldersEnabled = true) {
+    if (this.plugin.settings.foldersEnabled) {
       // If folders are enabled, add the folder in front
       return this.plugin.settings.bibleFolder + `/${b.book}/${b.book}-${b.chapter}${prefix(b.verse, "#")}|${b.ref}]]`
       
