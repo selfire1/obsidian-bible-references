@@ -77,7 +77,6 @@ function fixBibleReferences(app) {
   let verseRegex = this.plugin.settings.versepattern;
 
   let normalize_book = function(attempt: string) {
-    debugger;
     for (let book in BOOKS) {
       if (attempt.match(BOOKS[book])) {
         return book;
