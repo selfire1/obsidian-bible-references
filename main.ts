@@ -5,6 +5,14 @@ interface MyPluginSettings {
   linkpattern: string;
 }
 
+declare global {
+  interface Window {
+    app: App;
+  }
+}
+
+let regexPattern = '/((?:\d )?\w+) (\d+)(?::(\d+)(?:-(\d+))?)?/g'
+
 function fixBibleReferences(app) {
   let BOOKS:any = {
     'Genesis': /Genesis|Gen\.?|Ge\.?|Gn\.?/,
@@ -75,7 +83,7 @@ function fixBibleReferences(app) {
     'Revelation': /Revelation|Rev|Re|The Revelation/
   }
 
-  let verseRegex = this.plugin.settings.versepattern;
+  let verseRegex = regexPattern;
 
   let normalize_book = function(attempt: string) {
     for (let book in BOOKS) {
@@ -181,6 +189,7 @@ class SampleSettingTab extends PluginSettingTab {
         .onChange(async (value) => {
           console.log('Versepattern: ' + value);
           this.plugin.settings.versepattern = value;
+          let regexPattern = value;
           await this.plugin.saveSettings();
         }));
 
