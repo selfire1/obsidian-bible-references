@@ -2,6 +2,7 @@ import { App, Modal, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
 interface MyPluginSettings {
   versepattern: string;
+  linkpattern: string;
 }
 
 function fixBibleReferences(app) {
@@ -120,7 +121,8 @@ function fixBibleReferences(app) {
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-  versepattern: 'default'
+  versepattern: 'default',
+  linkpattern: 'default'
 }
 
 export default class MyPlugin extends Plugin {
@@ -179,6 +181,18 @@ class SampleSettingTab extends PluginSettingTab {
         .onChange(async (value) => {
           console.log('Versepattern: ' + value);
           this.plugin.settings.versepattern = value;
+          await this.plugin.saveSettings();
+        }));
+
+    new Setting(containerEl)
+      .setName('Bible Reference pattern')
+      .setDesc('Enter the pattern that should replace the finds. Supported: {{string}},{{book}}, {{chapter}}, {{verse}}, {{endverse}}.')
+      .addText(text => text
+        .setPlaceholder('Link pattern')
+        .setValue('ESV/{{book}}/{{book}}-{{chapter}}#|{{string}}')
+        .onChange(async (value) => {
+          console.log('Linkpattern: ' + value);
+          this.plugin.settings.linkpattern = value;
           await this.plugin.saveSettings();
         }));
   }
