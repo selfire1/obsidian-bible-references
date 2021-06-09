@@ -110,11 +110,11 @@ function fixBibleReferences(app) {
       Replaces a custom pattern like "{{book}}/{{book}}-{{chapter}}#{{verse}}|{{input}}"
       with the variables stored.
     */
-     
+
     // There is surely a prettier way to do this – maybe objects?
     let toReplace = ["{{book}}", "{{chapter}}", "{{verse}}", "{{input}}"]
     let replaceWith = [`${b.book}`, `${b.chapter}`, `${b.verse}`, `${b.ref}`]
-    
+
 
     for (let i = 0; i <= toReplace.length; i++){
       if (i === 0) {
@@ -140,7 +140,7 @@ function fixBibleReferences(app) {
       return linkPattern
 
       }
-    
+
   }
 
   let view = app.workspace.activeLeaf.view;
@@ -207,7 +207,7 @@ class SampleSettingTab extends PluginSettingTab {
     containerEl.empty();
 
     containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
- 
+
     new Setting(containerEl)
       .setName("Include folder in links.")
       .setDesc("Turn folders (e.g. [[ESV/…]]) in links on or off.")
@@ -235,7 +235,7 @@ class SampleSettingTab extends PluginSettingTab {
           await this.plugin.saveSettings();
         }));
     }
-   
+
     new Setting(containerEl)
       .setName('Bible Reference pattern')
       .setDesc('Enter the pattern that should replace the input. Supported: {{book}}, {{chapter}}, {{verse}}, {{endverse}}, {{input}}.')
