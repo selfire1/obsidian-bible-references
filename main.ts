@@ -106,7 +106,7 @@ function fixBibleReferences(app) {
   }
 
   let wikiBible = function(b: { book: any; chapter: any; verse: any; ref: any; }) {
-    /* NEW!
+    /*
       Replaces a custom pattern like "{{book}}/{{book}}-{{chapter}}#{{verse}}|{{input}}"
       with the variables stored.
     */
@@ -128,10 +128,11 @@ function fixBibleReferences(app) {
     if (this.plugin.settings.foldersEnabled && this.plugin.settings.bibleFolder !== '') {
       // If folders are enabled, add the folder in front
 
-      // Delete '/' if that's the first character
+      // Delete unnecessary '/' if that's the first character
       let bibleFolder:any = this.plugin.settings.bibleFolder
       bibleFolder.value = bibleFolder.replace(/^\//, '');
 
+      // Prefixes the link pattern with the bible folder and the name of the book
       return bibleFolder + "/" + `${b.book}/` + linkPattern
 
     } else {
@@ -238,7 +239,6 @@ class SampleSettingTab extends PluginSettingTab {
     new Setting(containerEl)
       .setName('Bible Reference pattern')
       .setDesc('Enter the pattern that should replace the input. Supported: {{book}}, {{chapter}}, {{verse}}, {{endverse}}, {{input}}.')
-      // .setDesc('Second desc')
       .addText(text => text
         .setPlaceholder('Link pattern')
         .setValue('{{book}}/{{book}}-{{chapter}}#{{verse}}|{{input}}')
