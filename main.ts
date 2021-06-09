@@ -2,7 +2,7 @@ import { App, Modal, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
 interface MyPluginSettings {
   bibleFolder: string;
-  customLinkPattern: string;
+  customLinkScheme: string;
   foldersEnabled: boolean;
 }
 
@@ -119,7 +119,7 @@ function fixBibleReferences(app) {
     for (let i = 0; i <= toReplace.length; i++){
       if (i === 0) {
         // For the first iteration, pull the custom pattern in the settings
-        var linkPattern = this.plugin.settings.customLinkPattern;
+        var linkPattern = this.plugin.settings.customLinkScheme;
       }
       // Replace custom patterns with the variables
       var linkPattern:any = linkPattern.replaceAll(toReplace[i], replaceWith[i])
@@ -155,7 +155,7 @@ function fixBibleReferences(app) {
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-  customLinkPattern: 'default',
+  customLinkScheme: 'default',
   foldersEnabled: false,
   bibleFolder: 'default'
 }
@@ -244,7 +244,7 @@ class SampleSettingTab extends PluginSettingTab {
         .setValue('{{book}}/{{book}}-{{chapter}}#{{verse}}|{{input}}')
         .onChange(async (value) => {
           console.log('Linkpattern: ' + value);
-          this.plugin.settings.customLinkPattern = value;
+          this.plugin.settings.customLinkScheme = value;
           await this.plugin.saveSettings();
         }));
 
