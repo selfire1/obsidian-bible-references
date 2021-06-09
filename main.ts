@@ -106,7 +106,16 @@ function fixBibleReferences(app) {
   }
 
   let wikiBible = function(b: { book: any; chapter: any; verse: any; ref: any; }) {
-    return `[[ESV/${b.book}/${b.book}-${b.chapter}${prefix(b.verse, "#")}|${b.ref}]]`;
+    if (this.plugin.settings.foldersEnabled = true) {
+      // If folders are enabled, add the folder in front
+      return this.plugin.settings.bibleFolder + `/${b.book}/${b.book}-${b.chapter}${prefix(b.verse, "#")}|${b.ref}]]`
+      
+    } else {
+      // If folders aren't enabled, don't add a folder
+      return `${b.book}/${b.book}-${b.chapter}${prefix(b.verse, "#")}|${b.ref}]]`
+
+      }
+    
   }
 
   let view = app.workspace.activeLeaf.view;
