@@ -1,7 +1,9 @@
 import { App, Modal, Plugin, PluginSettingTab, Setting } from 'obsidian';
 
 interface MyPluginSettings {
+  bibleFolder: string;
   versepattern: string;
+  foldersEnabled: boolean;
 }
 
 function fixBibleReferences(app) {
@@ -120,7 +122,9 @@ function fixBibleReferences(app) {
 }
 
 const DEFAULT_SETTINGS: MyPluginSettings = {
-  versepattern: 'default'
+  versepattern: 'default',
+  foldersEnabled: false,
+  bibleFolder: 'default'
 }
 
 export default class MyPlugin extends Plugin {
@@ -169,17 +173,44 @@ class SampleSettingTab extends PluginSettingTab {
     containerEl.empty();
 
     containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
+ 
+    new Setting(containerEl)
+      .setName("Include folder in links.")
+      .setDesc("Turn folders (e.g. [[ESV/…]]) in links on or off.")
+      .addToggle((toggle) => {
+        toggle.setValue(this.plugin.settings.foldersEnabled);
+        toggle.onChange(async (value) => {
+          console.log('Folders in links: ' + value);
+          this.plugin.settings.foldersEnabled = value;
+          await this.plugin.saveSettings();
+        });
+      });
 
     new Setting(containerEl)
-      .setName('Verse Pattern')
-      .setDesc('Enter your verse pattern')
+      .setName('Path to Bible Folder')
+      .setDesc('Enter the path to the Bible Folder. Current display: ')
       .addText(text => text
-        .setPlaceholder('Verse pattern')
-        .setValue('this.plugin.settings.versepattern')
+        .setPlaceholder('WEB')
+        .setValue('WEB')
         .onChange(async (value) => {
-          console.log('Secret: ' + value);
+          console.log('Bible Folder: ' + value);
+          this.plugin.settings.bibleFolder = value;
+          await this.plugin.saveSettings();
+        }));
+      
+   
+    new Setting(containerEl)
+      .setName('Bible Reference pattern')
+      .setDesc('Enter the pattern that should replace the input. Supported: {{string}},{{book}}, {{chapter}}, {{verse}}, {{endverse}}, {{input}}.')
+      .addText(text => text
+        .setPlaceholder('Link pattern')
+        .setValue('{{book}}/{{book}}-{{chapter}}#|{{input}}')
+        .onChange(async (value) => {
+          console.log('Linkpattern: ' + value);
           this.plugin.settings.versepattern = value;
           await this.plugin.saveSettings();
         }));
+
+    }
   }
-}
+
