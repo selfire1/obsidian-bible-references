@@ -206,7 +206,7 @@ class SampleSettingTab extends PluginSettingTab {
 
     containerEl.empty();
 
-    containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
+    containerEl.createEl('h2', {text: 'Bible References'});
 
     new Setting(containerEl)
       .setName("Include folder in links.")
