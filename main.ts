@@ -1,12 +1,11 @@
 import { App, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import * as Mustache from "mustache";
 
 interface BibleReferencesSettings {
-  bibleFolder: string;
   customLinkScheme: string;
-  foldersEnabled: boolean;
 }
 
-function fixBibleReferences(app) {
+let fixBibleReferences = function(plugin) {
   let BOOKS:any = {
     'Genesis': /Genesis|Gen\.?|Ge\.?|Gn\.?/,
     'Exodus': /Exodus|Ex\.?|Exod\.?|Exo\.?/,
@@ -106,44 +105,15 @@ function fixBibleReferences(app) {
   }
 
   let wikiBible = function(b: { book: any; chapter: any; verse: any; ref: any; }) {
-    /*
-      Replaces a custom pattern like "{{book}}/{{book}}-{{chapter}}#{{verse}}|{{input}}"
-      with the variables stored.
-    */
+  /*
+  Replaces a custom pattern like "{{book}}/{{book}}-{{chapter}}#{{verse}}|{{input}}"
+  with the variables stored.
+  */
 
-    // There is surely a prettier way to do this – maybe objects?
-    let toReplace = ["{{book}}", "{{chapter}}", "{{verse}}", "{{input}}"]
-    let replaceWith = [`${b.book}`, `${b.chapter}`, `${b.verse}`, `${b.ref}`]
-
-
-    for (let i = 0; i <= toReplace.length; i++){
-      if (i === 0) {
-        // For the first iteration, pull the custom pattern in the settings
-        var linkPattern = this.plugin.settings.customLinkScheme;
-      }
-      // Replace custom patterns with the variables
-      var linkPattern:any = linkPattern.replaceAll(toReplace[i], replaceWith[i])
-    }
-
-    if (this.plugin.settings.foldersEnabled && this.plugin.settings.bibleFolder !== '') {
-      // If folders are enabled, add the folder in front
-
-      // Delete unnecessary '/' if that's the first character
-      let bibleFolder:any = this.plugin.settings.bibleFolder
-      bibleFolder.value = bibleFolder.replace(/^\//, '');
-
-      // Prefixes the link pattern with the bible folder and the name of the book
-      return bibleFolder + "/" + `${b.book}/` + linkPattern
-
-    } else {
-      // If folders aren't enabled, don't add a folder
-      return linkPattern
-
-      }
-
+    return Mustache.render(plugin.settings.customLinkScheme, b)
   }
 
-  let view = app.workspace.activeLeaf.view;
+  let view = plugin.app.workspace.activeLeaf.view;
   let content = view.data
   for (let match of content.matchAll(verseRegex)) {
     let [str, book, chapter, startVerse, _endVerse] = match;
@@ -152,13 +122,11 @@ function fixBibleReferences(app) {
       content = content.replace(str, wikiBible(ref))
     }
   }
-  app.vault.modify(view.file, content);
+  globalThis.app.vault.modify(view.file, content);
 }
 
 const DEFAULT_SETTINGS: BibleReferencesSettings = {
   customLinkScheme: 'default',
-  foldersEnabled: false,
-  bibleFolder: 'default'
 }
 
 export default class BibleReferences extends Plugin {
@@ -173,7 +141,7 @@ export default class BibleReferences extends Plugin {
       id: 'fix-bible-references',
       name: 'Replace',
       callback: () => {
-        fixBibleReferences(this.app)
+        fixBibleReferences(this)
       },
     });
 
@@ -207,34 +175,6 @@ class SampleSettingTab extends PluginSettingTab {
     containerEl.empty();
 
     containerEl.createEl('h2', {text: 'Bible References'});
-
-    new Setting(containerEl)
-      .setName("Include folder in links.")
-      .setDesc("Turn folders (e.g. [[ESV/…]]) in links on or off.")
-      .addToggle((toggle) => {
-        toggle.setValue(this.plugin.settings.foldersEnabled);
-        toggle.onChange(async (value) => {
-          console.log('Folders in links: ' + value);
-          this.plugin.settings.foldersEnabled = value;
-          await this.plugin.saveSettings();
-          // Force refresh
-          this.display();
-        });
-      });
-
-    if (this.plugin.settings.foldersEnabled){
-    new Setting(containerEl)
-      .setName('Path to Bible Folder')
-      .setDesc('Enter the path to the Bible Folder.')
-      .addText(text => text
-        .setPlaceholder('BibleFolder')
-        .setValue('')
-        .onChange(async (value) => {
-          console.log('Bible Folder: ' + value);
-          this.plugin.settings.bibleFolder = value;
-          await this.plugin.saveSettings();
-        }));
-    }
 
     new Setting(containerEl)
       .setName('Bible Reference pattern')
