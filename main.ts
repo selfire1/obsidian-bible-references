@@ -178,16 +178,23 @@ class SampleSettingTab extends PluginSettingTab {
 
     new Setting(containerEl)
       .setName('Bible Reference pattern')
-      .setDesc('Enter the pattern that should replace the input. Supported: {{book}}, {{chapter}}, {{verse}}, {{endverse}}, {{input}}.')
-      .addText(text => text
+      .setDesc('Enter the mustache template for your bible verses. Supported tags: {{book}}, {{chapter}}, {{verse}}, {{endverse}}, {{input}}.')
+      .addTextArea((text) =>
+        {
+          text.inputEl.style.width = '100%';
+          text.inputEl.style.height = '450px';
+          text.inputEl.style.fontSize = '0.8em';
+        text
         .setPlaceholder('Link pattern')
         .setValue('{{book}}/{{book}}-{{chapter}}#{{verse}}|{{input}}')
         .onChange(async (value) => {
           console.log('Linkpattern: ' + value);
           this.plugin.settings.customLinkScheme = value;
           await this.plugin.saveSettings();
-        }));
+        })
 
-    }
+        return text;
+      }
+    );
   }
 
