@@ -110,7 +110,7 @@ let fixBibleReferences = function(plugin) {
   with the variables stored.
   */
 
-    return Mustache.render(plugin.settings.customLinkScheme, b)
+    return `[[${Mustache.render(plugin.settings.customLinkScheme, b)}]]`
   }
 
   let view = plugin.app.workspace.activeLeaf.view;
