@@ -143,7 +143,7 @@ let fixBibleReferences = function(plugin: any) {
       content = content.replace(str, wikiBible(ref))
     }
   }
-  this.plugin.app.vault.modify(view.file, content);
+  plugin.app.vault.modify(view.file, content);
 }
 
 const DEFAULT_SETTINGS: BibleReferencesSettings = {
