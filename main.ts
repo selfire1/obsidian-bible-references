@@ -5,7 +5,28 @@ interface BibleReferencesSettings {
   customLinkScheme: string;
 }
 
-let fixBibleReferences = function(plugin) {
+declare module "obsidian" {
+  interface App {
+    plugins: {
+      plugins: {
+        dataview: {
+          index: {
+            tags: {
+              invMap: Map<string, Set<string>>;
+              map: Map<string, Set<string>>;
+            };
+            etags: {
+              invMap: Map<string, Set<string>>;
+              map: Map<string, Set<string>>;
+            };
+          };
+        };
+      };
+    };
+  }
+}
+
+let fixBibleReferences = function(plugin: any) {
   let BOOKS:any = {
     'Genesis': /Genesis|Gen\.?|Ge\.?|Gn\.?/,
     'Exodus': /Exodus|Ex\.?|Exod\.?|Exo\.?/,
@@ -122,7 +143,7 @@ let fixBibleReferences = function(plugin) {
       content = content.replace(str, wikiBible(ref))
     }
   }
-  globalThis.app.vault.modify(view.file, content);
+  this.plugin.app.vault.modify(view.file, content);
 }
 
 const DEFAULT_SETTINGS: BibleReferencesSettings = {
